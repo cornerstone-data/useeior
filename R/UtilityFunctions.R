@@ -155,7 +155,7 @@ writeMatrixasBinFile <- function(matrix, path) {
 #' @param subdirectory The name of the package where the source file is stored on
 #' Data Commons including any subfolders (e.g. "lciafmt/traci_2_1")
 #' @param debug_url The Data Commons base url, including directory and subdirectories
-downloadDataCommonsfile <- function(source, subdirectory, debug_url) {
+downloadDataFile <- function(source, subdirectory, url) {
   # Define file directory
   directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
   # Check for and create subdirectory if necessary
@@ -164,7 +164,7 @@ downloadDataCommonsfile <- function(source, subdirectory, debug_url) {
   }
   
   # Download file
-  utils::download.file(paste0(debug_url, "/", source),
+  utils::download.file(paste0(url, "/", source),
                        paste0(directory, "/", source),
                        mode = "wb", quiet = TRUE)
 }
@@ -173,8 +173,9 @@ downloadDataCommonsfile <- function(source, subdirectory, debug_url) {
 #' or downloading from Data Commons and 
 #' saving to local directory
 #' @param static_file The name of a static file, including the subdirectories
-#' @return The static file originating from Data Commons
-loadDataCommonsfile <- function(static_file) {
+#' @param location The name of the data store location, which is used to look up the URL in DataStorageConfig.yml 
+#' @return The static file loaded from the location or local cache
+loadDataFile <- function(static_file, location) {
   # load method name
   method_name <- static_file
   # define symbol to split method name
@@ -184,17 +185,26 @@ loadDataCommonsfile <- function(static_file) {
   # file name is the string of the method name after the last "/"
   file_name <- sub(pat, "\\2", method_name)
   
-  # url for data commons
-  debug_url <- paste0("https://dmap-data-commons-ord.s3.amazonaws.com/", subdirectory)
-  
+  #Load location
+  configpath <- system.file("extdata/DataStorageConfig.yml", package = "useeior")
+  config <- configr::read.config(configpath)
+  if (is.null(config[[location]])) {
+    logging::logerror(paste("The location", location," does not have a URL associated with it."))
+    return(NULL)
+  } else {
+    url <- paste0(config[[location]],subdirectory)
+  }
+
+
+  #Local cache
   directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
   
   # file must be saved in the local directory
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
-    logging::loginfo(paste0("file not found, downloading from ", debug_url))
-    downloadDataCommonsfile(file_name, subdirectory, debug_url)
+    logging::loginfo(paste0("file not found, downloading from ", url))
+    downloadDataFile(file_name, subdirectory, url)
   }
   return(f)
 }
