@@ -155,7 +155,7 @@ writeMatrixasBinFile <- function(matrix, path) {
 #' @param subdirectory The name of the package where the source file is stored on
 #' Data Commons including any subfolders (e.g. "lciafmt/traci_2_1")
 #' @param debug_url The Data Commons base url, including directory and subdirectories
-downloadDataFile <- function(source, subdirectory, url) {
+downloadDataFile <- function(source, subdirectory, url, query_string) {
   # Define file directory
   directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
   # Check for and create subdirectory if necessary
@@ -164,8 +164,8 @@ downloadDataFile <- function(source, subdirectory, url) {
   }
   
   # Download file
-  utils::download.file(paste0(url, "/", source),
-                       paste0(directory, "/", source),
+  utils::download.file(paste0(file.path(url, source), query_string),
+                       file.path(directory, source),
                        mode = "wb", quiet = TRUE)
 }
 
@@ -181,9 +181,24 @@ loadDataFile <- function(static_file, location) {
   # define symbol to split method name
   pat <- "(.*)/(.*)"
   # subdirectory is the string of the method name prior to the last "/"
-  subdirectory <- sub(pat, "\\1", method_name)
+  
+  if (grepl(pat,method_name)) {
+    subdirectory <- sub(pat, "\\1", method_name)  
+  } else {
+    subdirectory <- ""
+  }
+  
   # file name is the string of the method name after the last "/"
   file_name <- sub(pat, "\\2", method_name)
+  
+  #If file name has a query string strip it off
+  query_string <- ""
+  if(grepl("\\?",file_name)) {
+    name_parts <- strsplit(method_name,"\\?")
+    file_name <- name_parts[[1]][1]
+    query_string <- paste0("?",name_parts[[1]][2])
+  }
+  
   
   #Load location
   configpath <- system.file("extdata/DataStorageConfig.yml", package = "useeior")
@@ -192,19 +207,20 @@ loadDataFile <- function(static_file, location) {
     logging::logerror(paste("The location", location," does not have a URL associated with it."))
     return(NULL)
   } else {
-    url <- paste0(config[[location]],subdirectory)
+    url <- file.path(config[[location]],subdirectory)
+    
   }
 
 
   #Local cache
-  directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
+  directory <- file.path(rappdirs::user_data_dir(), subdirectory)
   
   # file must be saved in the local directory
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
     logging::loginfo(paste0("file not found, downloading from ", url))
-    downloadDataFile(file_name, subdirectory, url)
+    downloadDataFile(file_name, subdirectory, url,query_string=query_string)
   }
   return(f)
 }
