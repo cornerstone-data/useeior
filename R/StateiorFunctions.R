@@ -1,9 +1,9 @@
 # Functions for handling data from stateior, https://github.com/USEPA/stateior
 
 #' Load two-region IO data of model iolevel and year from user's local directory
-#' or the EPA Data Commons.
+#' or a specified file location.
 #' @description Load two-region IO data of model iolevel and year from user's
-#' local directory or the EPA Data Commons.
+#' local directory or specified file location.
 #' @param model An EEIO form USEEIO model object with model specs and IO meta data loaded.
 #' @param dataname Name of desired IO data, can be "Make", "Use", "DomesticUse",
 #' "UseTransactions", "FinalDemand", "InternationalTradeAdjustment,

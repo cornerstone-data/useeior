@@ -3,7 +3,7 @@
 \name{getTwoRegionIOData}
 \alias{getTwoRegionIOData}
 \title{Load two-region IO data of model iolevel and year from user's local directory
-or the EPA Data Commons.}
+or a specified file location.}
 \usage{
 getTwoRegionIOData(model, dataname)
 }
@@ -20,5 +20,5 @@ A list of two-region IO data of model iolevel and year.
 }
 \description{
 Load two-region IO data of model iolevel and year from user's
-local directory or the EPA Data Commons.
+local directory or specified file location.
 }

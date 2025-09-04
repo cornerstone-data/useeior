@@ -150,11 +150,14 @@ writeMatrixasBinFile <- function(matrix, path) {
   close(out)
 }
 
-#' downloads files from the Data Commons and stores in a local temporary data directory
+#' Downloads files from a given source and stores in a local data directory
 #' @param source The name of the source file (e.g. "TRACI_2.1_v1.parquet")
-#' @param subdirectory The name of the package where the source file is stored on
-#' Data Commons including any subfolders (e.g. "lciafmt/traci_2_1")
-#' @param debug_url The Data Commons base url, including directory and subdirectories
+#' @param subdirectory The name of the subdirectory where the source file is stored on
+#' remote location including any subfolders (e.g. "lciafmt/traci_2_1"). May be empty.
+#' @param url The url of the data storage location
+#' @param query_string A string for URLs where query string is present after file name.
+#' e.g. (fbs.parquet?download=1). May be empty
+#' @return NULL if successful
 downloadDataFile <- function(source, subdirectory, url, query_string) {
   # Define file directory
   directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
@@ -169,9 +172,7 @@ downloadDataFile <- function(source, subdirectory, url, query_string) {
                        mode = "wb", quiet = TRUE)
 }
 
-#' Load the static file originating from Data Commons either by loading from local directory
-#' or downloading from Data Commons and 
-#' saving to local directory
+#' Load the file originating from a remote location
 #' @param static_file The name of a static file, including the subdirectories
 #' @param location The name of the data store location, which is used to look up the URL in DataStorageConfig.yml 
 #' @return The static file loaded from the location or local cache
