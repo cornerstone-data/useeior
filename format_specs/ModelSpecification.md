@@ -12,6 +12,7 @@ Model specifications are assigned in a yml file based on the parameters shown be
 | ModelType | str | Y | The [model type](#Model-Types) (e.g. `EEIO`) |
 | IODataSource | str | Y | The model source (e.g. `BEA` or `stateior`) |
 | IODataVersion | str | N | Required if IODataSource is `stateior`, [stateior model version number](https://github.com/USEPA/stateior/wiki/Planned-Package-Releases) |
+| IOFileLocation | str | N | Added with v1.8, mot required if retrieving data from Data Commons |
 | BasePriceType | str | Y | The model base price type (`PRO`: producer or `PUR`: purchaser) |
 | BasewithRedefinitions | bool | Y | Whether the model is based with redefinitions (TRUE or FALSE) |
 | CommodityorIndustryType | str | Y | Define if this is a commodity x commodity (`Commodity`) or industry x industry (`Industry`) model |
