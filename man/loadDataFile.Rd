@@ -4,12 +4,14 @@
 \alias{loadDataFile}
 \title{Load the file originating from a remote location}
 \usage{
-loadDataFile(static_file, location)
+loadDataFile(static_file, location, type)
 }
 \arguments{
 \item{static_file}{The name of a static file, including the subdirectories}
 
-\item{location}{The name of the data store location, which is used to look up the URL in DataStorageConfig.yml}
+\item{location}{The name of the data store location, which is used to look up the URL in RemoteLocationConfig.yml}
+
+\item{type}{A string that matches a key value in LocalStorageConfig.yml}
 }
 \value{
 The static file loaded from the location or local cache

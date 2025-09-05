@@ -21,7 +21,7 @@ getFlowbySectorCollapsed <- function(sat_spec) {
       }
     }
   } else {
-    f <- loadDataFile(sat_spec$StaticFile,sat_spec$FileLocation)
+    f <- loadDataFile(sat_spec$StaticFile,sat_spec$FileLocation,"SatelliteTable")
     fbs <- as.data.frame(arrow::read_parquet(f))
     # collapse the FBS sector columns into one column based on FlowType
     fbs$Sector <- NA
@@ -80,7 +80,7 @@ prepareFlowBySectorCollapsed <- function(fbsc, satellite=TRUE) {
 #' @param sat_spec, a specification file
 #' @return A data frame for flowsa data in sector by region totals format
 getFlowbySector <- function(sat_spec) {
-  f <- loadDataFile(sat_spec$StaticFile,sat_spec$FileLocation)
+  f <- loadDataFile(sat_spec$StaticFile,sat_spec$FileLocation,"SatelliteTable")
   fbs <- as.data.frame(arrow::read_parquet(f))
   fbs <- prepareFlowBySectorCollapsed(fbs, satellite=FALSE)
   return(fbs)

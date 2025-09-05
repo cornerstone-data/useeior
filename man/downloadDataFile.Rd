@@ -4,7 +4,7 @@
 \alias{downloadDataFile}
 \title{Downloads files from a given source and stores in a local data directory}
 \usage{
-downloadDataFile(source, subdirectory, url, query_string)
+downloadDataFile(source, subdirectory, url, query_string, localpath)
 }
 \arguments{
 \item{source}{The name of the source file (e.g. "TRACI_2.1_v1.parquet")}
@@ -15,7 +15,10 @@ remote location including any subfolders (e.g. "lciafmt/traci_2_1"). May be empt
 \item{url}{The url of the data storage location}
 
 \item{query_string}{A string for URLs where query string is present after file name.
-e.g. (fbs.parquet?download=1). May be empty}
+e.g. "?download=1". May be empty.}
+
+\item{localpath}{A string value looked up from LocalStorageConfig with a path for local storage
+like "flowsa/FlowBySector"}
 }
 \value{
 NULL if successful

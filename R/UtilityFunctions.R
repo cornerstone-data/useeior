@@ -156,11 +156,13 @@ writeMatrixasBinFile <- function(matrix, path) {
 #' remote location including any subfolders (e.g. "lciafmt/traci_2_1"). May be empty.
 #' @param url The url of the data storage location
 #' @param query_string A string for URLs where query string is present after file name.
-#' e.g. (fbs.parquet?download=1). May be empty
+#' e.g. "?download=1". May be empty.
+#' @param localpath A string value looked up from LocalStorageConfig with a path for local storage
+#'  like "flowsa/FlowBySector"
 #' @return NULL if successful
-downloadDataFile <- function(source, subdirectory, url, query_string) {
+downloadDataFile <- function(source, subdirectory, url, query_string, localpath) {
   # Define file directory
-  directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
+  directory <- paste0(rappdirs::user_data_dir(), "/", localpath)
   # Check for and create subdirectory if necessary
   if(!file.exists(directory)){
     dir.create(directory, recursive = TRUE)
@@ -174,9 +176,10 @@ downloadDataFile <- function(source, subdirectory, url, query_string) {
 
 #' Load the file originating from a remote location
 #' @param static_file The name of a static file, including the subdirectories
-#' @param location The name of the data store location, which is used to look up the URL in DataStorageConfig.yml 
+#' @param location The name of the data store location, which is used to look up the URL in RemoteLocationConfig.yml 
+#' @param type A string that matches a key value in LocalStorageConfig.yml
 #' @return The static file loaded from the location or local cache
-loadDataFile <- function(static_file, location) {
+loadDataFile <- function(static_file, location, type) {
   # load method name
   method_name <- static_file
   # define symbol to split method name
@@ -184,9 +187,9 @@ loadDataFile <- function(static_file, location) {
   # subdirectory is the string of the method name prior to the last "/"
   
   if (grepl(pat,method_name)) {
-    subdirectory <- sub(pat, "\\1", method_name)  
+    remotesubdirectory <- sub(pat, "\\1", method_name)  
   } else {
-    subdirectory <- ""
+    remotesubdirectory <- ""
   }
   
   # file name is the string of the method name after the last "/"
@@ -201,27 +204,37 @@ loadDataFile <- function(static_file, location) {
   }
   
   
-  #Load location
-  configpath <- system.file("extdata/DataStorageConfig.yml", package = "useeior")
-  config <- configr::read.config(configpath)
-  if (is.null(config[[location]])) {
+  #Load location config
+  configpath <- system.file("extdata/RemoteLocationConfig.yml", package = "useeior")
+  remoteconfig <- configr::read.config(configpath)
+  #Load local storage config
+  configpath <- system.file("extdata/LocalStorageConfig.yml", package = "useeior")
+  localconfig <- configr::read.config(configpath)
+  
+  if (is.null(remoteconfig[[location]])) {
     logging::logerror(paste("The location", location," does not have a URL associated with it."))
     return(NULL)
   } else {
-    url <- file.path(config[[location]],subdirectory)
+    url <- file.path(remoteconfig[[location]],remotesubdirectory)
     
   }
 
-
+  #Use local storage info for local storage path
+  
+  
   #Local cache
-  directory <- file.path(rappdirs::user_data_dir(), subdirectory)
+  localpath <- ""
+  if(!is.null(localconfig[[type]])) {
+    localpath <- localconfig[[type]]
+  }
+  directory <- file.path(rappdirs::user_data_dir(), localpath)
   
   # file must be saved in the local directory
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
     logging::loginfo(paste0("file not found, downloading from ", url))
-    downloadDataFile(file_name, subdirectory, url,query_string=query_string)
+    downloadDataFile(file_name, remotesubdirectory, url,query_string=query_string,localpath=localpath)
   }
   return(f)
 }
