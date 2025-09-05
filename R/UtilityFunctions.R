@@ -213,7 +213,9 @@ loadDataFile <- function(static_file, location, type) {
   #Use local storage info for local storage path
   #Local cache
   localpath <- ""
-  if(!is.null(localconfig[[type]])) {
+  if(remotesubdirectory != "") {
+    localpath <- remotesubdirectory
+  } else if(!is.null(localconfig[[type]])) {
     localpath <- localconfig[[type]]
   }
   directory <- file.path(rappdirs::user_data_dir(), localpath)
