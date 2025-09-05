@@ -41,7 +41,7 @@ loadSatTables <- function(model) {
     if(sat_spec$FileLocation == 'None'){
       logging::loginfo(paste0("Generating ", sat_spec$FullName, " flows..."))      
     } else {
-      logging::loginfo(paste0("Loading ", sat_spec$FullName, " flows from ", sat_spec$FileLocation, "..."))
+      logging::loginfo(paste0("Loading ", sat_spec$FullName, " flows..."))
     }
     if(sat_spec$SectorListSource == "NAICS" && sat_spec$SectorListYear != model$specs$BaseIOSchema) {
       logging::logwarn(paste0("SectorListYear of ", sat_spec$FullName," does not match the BaseIOSchema ",
