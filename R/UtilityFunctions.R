@@ -202,26 +202,15 @@ loadDataFile <- function(static_file, location, type) {
     file_name <- name_parts[[1]][1]
     query_string <- paste0("?",name_parts[[1]][2])
   }
-  
-  
+
   #Load location config
   configpath <- system.file("extdata/RemoteLocationConfig.yml", package = "useeior")
   remoteconfig <- configr::read.config(configpath)
   #Load local storage config
   configpath <- system.file("extdata/LocalStorageConfig.yml", package = "useeior")
   localconfig <- configr::read.config(configpath)
-  
-  if (is.null(remoteconfig[[location]])) {
-    logging::logerror(paste("The location", location," does not have a URL associated with it."))
-    return(NULL)
-  } else {
-    url <- file.path(remoteconfig[[location]],remotesubdirectory)
-    
-  }
 
   #Use local storage info for local storage path
-  
-  
   #Local cache
   localpath <- ""
   if(!is.null(localconfig[[type]])) {
@@ -233,6 +222,13 @@ loadDataFile <- function(static_file, location, type) {
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
+    if (is.null(remoteconfig[[location]])) {
+      logging::logerror(paste("The location", location," does not have a URL associated with it. ",
+                              "Ensure it is listed in RemoteLocationConfig.yml"))
+      return(NULL)
+    } else {
+      url <- file.path(remoteconfig[[location]],remotesubdirectory)
+    }
     logging::loginfo(paste0("file not found, downloading from ", url))
     downloadDataFile(file_name, remotesubdirectory, url,query_string=query_string,localpath=localpath)
   }
