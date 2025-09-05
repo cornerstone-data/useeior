@@ -22,7 +22,7 @@ readImportFactorTable <- function(IFSpec, configpaths = NULL) {
   if(is.null(IFSpec$FileLocation) || IFSpec$FileLocation == "useeior"){
     filename <- getInputFilePath(configpaths, folderPath = "extdata", filename = IFSpec$StaticFile)
   } else {
-    filename <- loadDataFile(IFSpec$StaticFile,IFSpec$FileLocation,"ImportFactors")    
+    filename <- loadDataFile(IFSpec$StaticFile, IFSpec$FileLocation, "ImportFactors")    
     IFTable <- utils::read.table(filename, sep = ",", header = TRUE,
                                stringsAsFactors = FALSE)
   }

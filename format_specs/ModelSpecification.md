@@ -12,7 +12,7 @@ Model specifications are assigned in a yml file based on the parameters shown be
 | ModelType | str | Y | The [model type](#Model-Types) (e.g. `EEIO`) |
 | IODataSource | str | Y | The model source (e.g. `BEA` or `stateior`) |
 | IODataVersion | str | N | Required if IODataSource is `stateior`, [stateior model version number](https://github.com/USEPA/stateior/wiki/Planned-Package-Releases) |
-| IOFileLocation | str | N | Added with v1.8, mot required if retrieving data from Data Commons |
+| IOFileLocation | str | N | Added with v1.8, not required if retrieving data from Data Commons |
 | BasePriceType | str | Y | The model base price type (`PRO`: producer or `PUR`: purchaser) |
 | BasewithRedefinitions | bool | Y | Whether the model is based with redefinitions (TRUE or FALSE) |
 | CommodityorIndustryType | str | Y | Define if this is a commodity x commodity (`Commodity`) or industry x industry (`Industry`) model |
@@ -39,7 +39,7 @@ Model specifications are assigned in a yml file based on the parameters shown be
 | Abbreviation | str | Y | Abbreviation used for the satellite table |
 | StaticSource | bool | Y | If TRUE, indicates the use of a static source file. If FALSE the data will be generated dynamically |
 | StaticFile | str | N | Required if StaticSource = TRUE, indicates the path of the source file |
-| FileLocation | str | Y | The location of the source file. Options are 'DataCommons' or 'useeior'. If StaticSource = FALSE, set to `None` |
+| FileLocation | str | Y | The location of the source file. Options are listed in [RemoteLocationConfig.yaml](../inst/extdata/RemoteLocationConfig.yaml). If StaticSource = FALSE, set to `None` |
 | DataYears | list | Y | Years reprsented by flows included in the satellite table |
 | Locations | list | Y | The model name |
 | SectorListSource | str | Y | The source category used for sectors in the satellite table (e.g. 'BEA' or 'NAICS') |
@@ -62,7 +62,7 @@ Model specifications are assigned in a yml file based on the parameters shown be
 | SimpleName | str | Y |  |
 | StaticSource | bool | Y | If TRUE, indicates the use of a static source file. If FALSE the data will be generated dynamically |
 | StaticFile | str | N | Required if StaticSource = TRUE, indicates the path of the source file |
-| FileLocation | str | Y | The location of the source file. Options are 'DataCommons' or 'useeior'. |
+| FileLocation | str | Y | The location of the source file. Options are listed in [RemoteLocationConfig.yaml](../inst/extdata/RemoteLocationConfig.yaml). |
 | ScriptFunctionCall | str | N | Function name for additional processing of indicator |
 | ScriptFunctionParameters | list | N | Parameters for ScriptFunctionCall |
 | DataSources | list | N | Metadata for the indicator [sources](#datasources-specifications) |

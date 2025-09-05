@@ -229,10 +229,11 @@ loadDataFile <- function(static_file, location, type) {
                               "Ensure it is listed in RemoteLocationConfig.yml"))
       return(NULL)
     } else {
-      url <- file.path(remoteconfig[[location]],remotesubdirectory)
+      url <- file.path(remoteconfig[[location]], remotesubdirectory)
     }
     logging::loginfo(paste0("file not found, downloading from ", url))
-    downloadDataFile(file_name, remotesubdirectory, url,query_string=query_string,localpath=localpath)
+    downloadDataFile(file_name, remotesubdirectory, url, query_string=query_string,
+                     localpath=localpath)
   }
   return(f)
 }

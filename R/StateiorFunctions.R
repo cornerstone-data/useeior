@@ -37,10 +37,10 @@ getTwoRegionIOData <- function(model, dataname) {
   logging::loginfo(paste0("Loading ", filename))
   filename <-  paste0(filename, ".rds")
   if (!is.null(model$specs$IOFileLocation)) {
-    f <- loadDataFile(filename,model$specs$IOFileLocation,"stateior")
+    f <- loadDataFile(filename, model$specs$IOFileLocation, "stateior")
   } else {
     #handle case where Data Commons files have subdirectory
-    f <- loadDataFile(paste0("stateio/",filename),"DataCommons","stateior")
+    f <- loadDataFile(paste0("stateio/",filename), "DataCommons", "stateior")
   }
   
   TwoRegionIOData <- readRDS(f)
