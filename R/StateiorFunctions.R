@@ -1,9 +1,9 @@
 # Functions for handling data from stateior, https://github.com/USEPA/stateior
 
 #' Load two-region IO data of model iolevel and year from user's local directory
-#' or the EPA Data Commons.
+#' or a specified file location.
 #' @description Load two-region IO data of model iolevel and year from user's
-#' local directory or the EPA Data Commons.
+#' local directory or specified file location.
 #' @param model An EEIO form USEEIO model object with model specs and IO meta data loaded.
 #' @param dataname Name of desired IO data, can be "Make", "Use", "DomesticUse",
 #' "UseTransactions", "FinalDemand", "InternationalTradeAdjustment,
@@ -35,7 +35,15 @@ getTwoRegionIOData <- function(model, dataname) {
   }
   # Load data
   logging::loginfo(paste0("Loading ", filename))
-  TwoRegionIOData <- readRDS(loadDataCommonsfile(paste0("stateio/", filename, ".rds")))
+  filename <-  paste0(filename, ".rds")
+  if (!is.null(model$specs$IOFileLocation)) {
+    f <- loadDataFile(filename, model$specs$IOFileLocation, "stateior")
+  } else {
+    #handle case where Data Commons files have subdirectory
+    f <- loadDataFile(paste0("stateio/",filename), "DataCommons", "stateior")
+  }
+  
+  TwoRegionIOData <- readRDS(f)
   # Keep SoI and RoUS only
   TwoRegionIOData <- TwoRegionIOData[[state]]
   if(dataname %in% c("UseTransactions", "DomesticUseTransactions")) {

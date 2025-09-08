@@ -37,7 +37,7 @@ getImpactMethod <- function(ind_spec) {
     imp_method <- lciafmt$get_mapped_method(method_id = parameters$method_id,
                                             indicators = indicators, methods = methods)
   } else {
-    f <- loadDataCommonsfile(ind_spec$StaticFile)
+    f <- loadDataFile(ind_spec$StaticFile, ind_spec$FileLocation, "Indicators")
     imp_method <- as.data.frame(arrow::read_parquet(f))
   }
   

@@ -21,7 +21,7 @@ loadIndicators <- function(model) {
    meta <- data.frame()
    factors <- data.frame()
    for (s in model$specs$Indicators) {
-      logging::loginfo(paste0("Getting ", s$Name, " indicator from ", s$FileLocation, "..."))
+      logging::loginfo(paste0("Loading ", s$Name, " indicator..."))
       
       # Populate metadata
       meta_fields <- c("Name","Code","Group","Unit","SimpleUnit","SimpleName")

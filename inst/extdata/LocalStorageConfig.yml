@@ -1,0 +1,4 @@
+SatelliteTable: "flowsa/FlowBySector"
+Indicators: "lciafmt"
+stateior: "stateio"
+ImportFactors: "useeior"

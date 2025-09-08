@@ -4,10 +4,10 @@
 \alias{getFlowbySector}
 \title{Load flowsa's FlowBySector df}
 \usage{
-getFlowbySector(filepath)
+getFlowbySector(sat_spec)
 }
 \arguments{
-\item{filepath, }{a filepath to local parquet file}
+\item{sat_spec, }{a specification file}
 }
 \value{
 A data frame for flowsa data in sector by region totals format
