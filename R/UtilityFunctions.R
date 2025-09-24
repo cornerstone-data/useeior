@@ -224,12 +224,20 @@ loadDataFile <- function(static_file, location, type) {
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
+    if (grepl("Zenodo", location)) {
+      # Extract the entry ID from the model spec for use in url
+      id <- sub("Zenodo", "", location)
+      location <- "Zenodo"
+    } else {
+      id <- ""
+    }
     if (is.null(remoteconfig[[location]])) {
       logging::logerror(paste("The location", location," does not have a URL associated with it. ",
                               "Ensure it is listed in RemoteLocationConfig.yml"))
       return(NULL)
     } else {
-      url <- file.path(remoteconfig[[location]], remotesubdirectory)
+      url <- file.path(sub("__ID__", id, remoteconfig[[location]]),
+                       remotesubdirectory)
     }
     logging::loginfo(paste0("file not found, downloading from ", url))
     downloadDataFile(file_name, remotesubdirectory, url, query_string=query_string,
