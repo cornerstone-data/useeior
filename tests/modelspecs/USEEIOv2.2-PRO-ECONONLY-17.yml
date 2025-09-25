@@ -1,0 +1,19 @@
+Model: "USEEIOv2.2-PRO-ECONONLY-17"
+BaseIOSchema: 2017
+BaseIOLevel: "Detail"
+IOYear: 2017 # Year for IO data
+ModelRegionAcronyms: ["US"]
+ModelType: "EEIO"
+IODataSource: "BEA"
+BasePriceType: "PRO" #producer
+BasewithRedefinitions: FALSE
+CommodityorIndustryType: "Commodity"
+ScrapIncluded: FALSE
+DisaggregationSpecs: null
+
+
+DemandVectors:
+    DefaultDemand: "DefaultDemandVectors" # Name of default demand vectors yml file
+# Additional demand vectors beyond useeior defaults
+
+   
