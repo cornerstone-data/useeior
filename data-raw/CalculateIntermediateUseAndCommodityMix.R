@@ -1,34 +1,29 @@
 ## Generate Intermediate Use and Commodity mix tables for nowcasting
 
 ## 1. Load/Build objects
-# Set paths
-modelspecs_dir <- "tests/modelspecs"
-modelspecs_path <- file.path(modelspecs_dir)
-
 
 # 1.1 Build the model objects required for this file to run.
 # Model specs: PRO price, 2017 schema, ECON only, Detail level
-m <- "USEEIOv2.2-PRO-ECONONLY-17"
-cfg <- paste0(file.path(modelspecs_path,m),".yml")
-Make_Use_2017 <- buildIOModel(m, configpaths = cfg)
-#saveRDS(Make_Use_2017, "data/USEEIOv2.2-PRO-ECONONLY-17.rds")
+m <- "USEEIOv2.3-GHG" # USEEIOv2.2-PRO-ECONONLY-17
+Make_Use_2017 <- buildIOModel(m)
+# saveRDS(Make_Use_2017, "data/USEEIOv2.2-PRO-ECONONLY-17.rds")
 
 # The 2017 SUT model used in this script can be built with the following commands
 # Model specs: BAS price, 2017 schema, ECON only, Detail level
 
-SUT_2017 <-  initializeModel(m, cfg)
+SUT_2017 <-  initializeModel(m)
 SUT_2017$specs$BasePriceType = "BAS"
-SUT_2017 <- loadIOData(SUT_2017, cfg)
+SUT_2017 <- loadIOData(SUT_2017)
 SUT_2017 <- loadDemandVectors(SUT_2017)
 # function calls below part of buildIOModel() but don't work for BAS price type
-#SUT_2017 <- buildEconomicMatrices(SUT_2017)
-#SUT_2017 <- buildPriceMatrices(SUT_2017)
+# SUT_2017 <- buildEconomicMatrices(SUT_2017)
+# SUT_2017 <- buildPriceMatrices(SUT_2017)
 
-#Adding supply table back in 
+# Adding supply table back in 
 schema <- getSchemaCode(SUT_2017$specs)
 SUT_2017$Supply <- get(paste(na.omit(c(SUT_2017$specs$BaseIOLevel, "Supply", SUT_2017$specs$IOYear, schema)), collapse = "_"))
 
-#saveRDS(SUT_2017, "data/SUT_2017.rds")
+# saveRDS(SUT_2017, "data/SUT_2017.rds")
 
 # Set target years
 target_years <- c(2018:2023)
@@ -54,8 +49,6 @@ for(year in target_years){
   
   # 2.1: Inflate the inputs to target year using Rho
   intermediate_Use_ls[[inter_U_name]] <- Make_Use_2017$U # Store original U in list for modification
-  
-  
   
   # There are no values in Rho for VA, so we calculate a weighted average Rho value for the VA rows for the current year
   # by using the commodity output values as weights, multiplying the Rho values by the weights, 
@@ -85,8 +78,7 @@ for(year in target_years){
   # Sweep should result in the same values as normalizeIOTransactions
   # intermediate_Use_ls[[inter_U_name]] <- sweep(intermediate_Use_ls[[inter_U_name]], 2,
   #                                              colSums(intermediate_Use_ls[[inter_U_name]]), FUN = '/') 
-  
-  
+
   intermediate_Use_ls[[inter_U_name]] <- useeior:::normalizeIOTransactions( 
     intermediate_Use_ls[[inter_U_name]],
     colSums(intermediate_Use_ls[[inter_U_name]]))
@@ -99,9 +91,7 @@ for(year in target_years){
       stop("Error in intermediate use")
     }
   }
-  
-  
-  
+
   # 2.3: Multiply the ratios by gross industry output of current year (multiply columns by vector)
   
   # Drop value added and final demand from intermediate U matrix
@@ -132,8 +122,6 @@ for(year in target_years){
 # Note that SUT_2017$MakeTransactions is equal to as.data.frame(t(SUT_2017$Supply[1:402, 1:402])*1e6)). I.e., 
 #  all.equal(SUT_2017$MakeTransactions, as.data.frame(t(SUT_2017$Supply[1:402, 1:402])*1e6))
 # > [1] "Names: 402 string mismatches"                                 "Attributes: < Component “row.names”: 402 string mismatches >"
-
-
 
 # Changes from step 2:
 # intermediate_Use_ls -> com_mix_ls
@@ -194,7 +182,7 @@ for(year in target_years){
   com_mix_ls[[com_mix_name]] <-  com_mix_ls[[com_mix_name]] %*%
     diag(Make_Use_2017$MultiYearIndustryOutput[,ind_year_index])
   
-  #Convert to DF for printing
+  # Convert to DF for printing
   com_mix_ls[[com_mix_name]] <-  data.frame(com_mix_ls[[com_mix_name]])
   colnames(com_mix_ls[[com_mix_name]]) <- Make_Use_2017$Industries$Code_Loc
   rownames(com_mix_ls[[com_mix_name]]) <- Make_Use_2017$Commodities$Code_Loc
@@ -202,64 +190,15 @@ for(year in target_years){
   # Sum across the rows rather than the columns to obtain commodity totals because we transposed the Make table
   comOutput_ls[[paste0(as.character(year),"_ComOutput_S_BAS")]] <- rowSums(com_mix_ls[[com_mix_name]])
   
-  
   # To make sure the rows are printed to excel
   com_mix_ls[[com_mix_name]] <- cbind(row.names(com_mix_ls[[com_mix_name]]), com_mix_ls[[com_mix_name]])
   
   
 }
 
-
 ## 4. Print
-intermediate_Use_print_path <- file.path("data/intermediate_Use.xlsx")
-commodity_mix_print_path <- file.path("data/com_mix.xlsx")
+dir <- file.path(rappdirs::user_data_dir(), "USEEIO-input")
+dir.create(dir, showWarnings = FALSE)
 
-writexl::write_xlsx(intermediate_Use_ls, intermediate_Use_print_path, format_headers = FALSE)
-writexl::write_xlsx(com_mix_ls, commodity_mix_print_path, format_headers = FALSE)
-
-
-
-
-#source("data-raw/BEAData.R")
-# 
-# ls <- list("url" = "USEEIO",
-#            "date_accessed" = "",
-#            "date_last_modified" = "")
-# 
-# dir <- file.path(rappdirs::user_data_dir(), "USEEIO-input")
-# dir.create(dir, showWarnings = FALSE)
-# 
-# for(yr in c(2018:2023)) {
-#   name <- "U_out"
-#   df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
-#   rownames(df) <- df[, 1]
-#   df <- df[, -1]
-#   names(df) <- gsub("^X", "", names(df))
-#   writeFile(df = df, year = yr,
-#             name = paste0("Detail_Use_", yr, "_PRO_BeforeRedef"), ls = ls,
-#             schema_year = 2017)
-# 
-#   name <- "U_imports_out"
-#   df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
-#   rownames(df) <- df[, 1]
-#   df <- df[, -1]
-#   names(df) <- gsub("^X", "", names(df))
-#   writeFile(df = df, year = yr,
-#             name = paste0("Detail_Import_", yr, "_BeforeRedef"), ls = ls,
-#             schema_year = 2017)
-#   
-#   name <- "V_out"
-#   df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
-#   rownames(df) <- df[, 1]
-#   df <- df[, -1]
-#   names(df) <- gsub("^X", "", names(df))
-#   df <- t(df) ## TRANSPOSE!
-#   writeFile(df = df, year = yr,
-#             name = paste0("Detail_Make_", yr, "_BeforeRedef"), ls = ls,
-#             schema_year = 2017)
-# }
-
-
-
-
-
+writexl::write_xlsx(intermediate_Use_ls, file.path(dir, "intermediate_Use.xlsx"), format_headers = FALSE)
+writexl::write_xlsx(com_mix_ls, file.path(dir, "com_mix.xlsx"), format_headers = FALSE)
