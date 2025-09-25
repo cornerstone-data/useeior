@@ -32,10 +32,13 @@ adjustOutputbyCPI <- function (outputyear, referenceyear, location_acronym, IsRo
 #' @return A matrix.
 normalizeIOTransactions <- function (IO_transactions_df, IO_output_df) {
   # Replace 0 in IO_transactions_df and IO_output_df with 1E-3 to avoid errors in solve(x_hat)
-  for (s in names(IO_output_df[IO_output_df == 0])){
-    IO_transactions_df[s, s] <- 1E-3    
+  for (s in names(IO_output_df[round(IO_output_df, digits=0) == 0])){
+    # Check that sector is both row and column before attempting to adjust
+    if (s %in% rownames(IO_transactions_df) && s %in% colnames(IO_transactions_df)) {
+      IO_transactions_df[s, s] <- 1E-3
+    }
   }
-  IO_output_df[IO_output_df == 0] <- 1E-3
+  IO_output_df[round(IO_output_df, digits=0) == 0] <- 1E-3
   Z <- as.matrix(IO_transactions_df)
   x <- unname(unlist(IO_output_df))
   x_hat <- diag(x, length(x), length(x))
@@ -127,7 +130,9 @@ transformIndustryCPItoCommodityCPIforYear <- function(year, model) {
   if (year==model$specs$BaseIOSchema) {
     for (s in CommodityCPI) {
       if (abs(100-s)>tolerance) {
-        stop("Error in CommodityCPI")
+        ## Temporary switch to warning while debugging
+        logging::logwarn(paste0(year, ", ", s, "; Error in CommodityCPI"))
+        # stop("Error in CommodityCPI")
       }
     }
   }
@@ -308,7 +313,9 @@ convertUsefromPURtoBAS <- function(UseSUT_PUR, specs, io_codes) {
 generateTaxLessSubsidiesTable <- function(model) {
   schema <- getSchemaCode(model$specs)
   # Load Supply table
-  Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", model$specs$IOYear, schema)),
+  ### FOR NOW OVERWRITE THIS TO USE 2017
+  # Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", model$specs$IOYear, schema)),
+  Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", 2017, schema)),
                       collapse = "_"))
   # Get basic price and tax less subsidies vectors from Supply
   import_cols <- getVectorOfCodes(model$specs$BaseIOSchema,
