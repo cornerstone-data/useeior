@@ -856,43 +856,43 @@
 #' @source \url{https://apps.bea.gov/industry/xls/io-annual/ImportMatrices_Before_Redefinitions_DET_2017.xlsx}
 "Detail_Import_2012_BeforeRedef_17sch"
 
-#' Detail 1997-2023 Gross Output (2017 schema)
-#' @format A dataframe with 402 obs. and 27 variables
+#' Detail 1997-2024 Gross Output (2017 schema)
+#' @format A dataframe with 402 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Detail_GrossOutput_IO_17sch"
 
-#' Summary 1997-2023 Gross Output (2017 schema)
-#' @format A dataframe with 71 obs. and 27 variables
+#' Summary 1997-2024 Gross Output (2017 schema)
+#' @format A dataframe with 71 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Summary_GrossOutput_IO_17sch"
 
-#' Sector 1997-2023 Gross Output (2017 schema)
-#' @format A dataframe with 15 obs. and 27 variables
+#' Sector 1997-2024 Gross Output (2017 schema)
+#' @format A dataframe with 15 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Sector_GrossOutput_IO_17sch"
 
-#' Detail 1997-2023 CPI (2017 schema)
-#' @format A dataframe with 402 obs. and 27 variables
+#' Detail 1997-2024 CPI (2017 schema)
+#' @format A dataframe with 402 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Detail_CPI_IO_17sch"
 
-#' Summary 1997-2023 CPI (2017 schema)
-#' @format A dataframe with 71 obs. and 27 variables
+#' Summary 1997-2024 CPI (2017 schema)
+#' @format A dataframe with 71 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Summary_CPI_IO_17sch"
 
-#' Sector 1997-2023 CPI (2017 schema)
-#' @format A dataframe with 15 obs. and 27 variables
+#' Sector 1997-2024 CPI (2017 schema)
+#' @format A dataframe with 15 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Sector_CPI_IO_17sch"
 
-#' Summary 1997-2023 Value Added (2017 schema)
-#' @format A dataframe with 71 obs. and 27 variables
+#' Summary 1997-2024 Value Added (2017 schema)
+#' @format A dataframe with 71 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Summary_ValueAdded_IO_17sch"
 
-#' Sector 1997-2023 Value Added (2017 schema)
-#' @format A dataframe with 15 obs. and 27 variables
+#' Sector 1997-2024 Value Added (2017 schema)
+#' @format A dataframe with 15 obs. and 28 variables
 #' @source \url{https://apps.bea.gov/industry/Release/ZIP/UGdpByInd.zip}
 "Sector_ValueAdded_IO_17sch"
 
