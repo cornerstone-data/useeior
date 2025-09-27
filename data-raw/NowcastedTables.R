@@ -1,6 +1,7 @@
 ## Generate Nowcasted data objects from files generated in USEEIO repo and stored in USEEIO-input
 
 source("data-raw/BEAData.R")
+source("R/UtilityFunctions.R")
 
 ls <- list("url" = "USEEIO",
            "date_accessed" = "",

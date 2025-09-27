@@ -130,9 +130,7 @@ transformIndustryCPItoCommodityCPIforYear <- function(year, model) {
   if (year==model$specs$BaseIOSchema) {
     for (s in CommodityCPI) {
       if (abs(100-s)>tolerance) {
-        ## Temporary switch to warning while debugging
-        logging::logwarn(paste0(year, ", ", s, "; Error in CommodityCPI"))
-        # stop("Error in CommodityCPI")
+        stop("Error in CommodityCPI")
       }
     }
   }
