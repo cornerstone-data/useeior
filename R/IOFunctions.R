@@ -311,9 +311,9 @@ convertUsefromPURtoBAS <- function(UseSUT_PUR, specs, io_codes) {
 generateTaxLessSubsidiesTable <- function(model) {
   schema <- getSchemaCode(model$specs)
   # Load Supply table
-  ### FOR NOW OVERWRITE THIS TO USE 2017
-  # Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", model$specs$IOYear, schema)),
-  Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", 2017, schema)),
+  # For Detail tables use benchmark year not IOYear for nowcasted tables
+  IOyear <- ifelse(model$specs$BaseIOLevel == "Detail", model$specs$BaseIOSchema, model$specs$IOYear)
+  Supply <- get(paste(na.omit(c(model$specs$BaseIOLevel, "Supply", IOyear, schema)),
                       collapse = "_"))
   # Get basic price and tax less subsidies vectors from Supply
   import_cols <- getVectorOfCodes(model$specs$BaseIOSchema,
