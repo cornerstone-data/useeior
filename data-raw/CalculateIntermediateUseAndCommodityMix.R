@@ -1,5 +1,7 @@
 ## Generate Intermediate Use and Commodity mix tables for nowcasting
 
+devtools::load_all()
+
 ## 1. Load/Build objects
 
 # 1.1 Build the model objects required for this file to run.
