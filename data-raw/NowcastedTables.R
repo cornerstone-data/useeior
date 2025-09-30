@@ -4,7 +4,7 @@ source("data-raw/BEAData.R")
 source("R/UtilityFunctions.R")
 
 ls <- list("url" = "USEEIO",
-           "date_accessed" = "",
+           "date_accessed" = format(Sys.Date(), "%Y-%m-%d"),
            "date_last_modified" = "")
 
 dir <- file.path(rappdirs::user_data_dir(), "USEEIO-input")
@@ -12,7 +12,9 @@ dir.create(dir, showWarnings = FALSE)
 
 for(yr in c(2018:2023)) {
   name <- "U_out"
-  df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
+  file <- file.path(dir, paste0(name, "_", yr, ".csv"))
+  ls['date_last_modified'] <- as.character(as.Date(file.mtime(file)))
+  df <- read.csv(file)
   rownames(df) <- df[, 1]
   df <- df[, -1]
   names(df) <- gsub("^X", "", names(df))
@@ -21,7 +23,9 @@ for(yr in c(2018:2023)) {
             schema_year = 2017)
 
   name <- "U_imports_out"
-  df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
+  file <- file.path(dir, paste0(name, "_", yr, ".csv"))
+  ls['date_last_modified'] <- as.character(as.Date(file.mtime(file)))
+  df <- read.csv(file)
   rownames(df) <- df[, 1]
   df <- df[, -1]
   names(df) <- gsub("^X", "", names(df))
@@ -30,7 +34,9 @@ for(yr in c(2018:2023)) {
             schema_year = 2017)
   
   name <- "V_out"
-  df <- read.csv(file.path(dir, paste0(name, "_", yr, ".csv")))
+  file <- file.path(dir, paste0(name, "_", yr, ".csv"))
+  ls['date_last_modified'] <- as.character(as.Date(file.mtime(file)))
+  df <- read.csv(file)
   rownames(df) <- df[, 1]
   df <- df[, -1]
   names(df) <- gsub("^X", "", names(df))
