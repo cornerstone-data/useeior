@@ -633,13 +633,17 @@ cleanSectorNames <- function(df) {
 # Get BEA (Detail/Summary/Sector) Code and Name
 getBEACodeName <- function(schema_year) {
   # Download data
-  # Get the data from AllTablesIO
-  url <- getBEAIOTables()[["url"]]
-  date_accessed <- getBEAIOTables()[["date_accessed"]]
-  files <- getBEAIOTables()[["files"]]
-  FileName <- file.path(dir, "AllTableIO",
+  # Get the data from MAKE-USE-IMPORTS (BEFORE REDEFINITIONS)
+  url <- getBEAIOTables("IO")[["url"]]
+  date_accessed <- getBEAIOTables("IO")[["date_accessed"]]
+  files <- getBEAIOTables("IO")[["files"]]
+  FileName <- file.path(dir, "MAKE-USE-IMPORTS (BEFORE REDEFINITIONS)",
                         files[startsWith(files, "IOUse_Before_Redefinitions_PRO") &
-                        endsWith(files, "Detail.xlsx")])
+                                endsWith(files, "Detail.xlsx")])
+  
+  # FileName <- file.path(dir, "AllTableIO",
+  #                       files[startsWith(files, "IOUse_Before_Redefinitions_PRO") &
+  #                       endsWith(files, "Detail.xlsx")])
 
   # Get the data from AllTablesSUP
   # url <- getBEASupplyUseTables()[["url"]]
@@ -695,9 +699,13 @@ getBEACodeName <- function(schema_year) {
 
   ### Summary ###
   # Load data
-  FileName <- file.path(dir, "AllTableIO",
+  FileName <- file.path(dir, "MAKE-USE-IMPORTS (BEFORE REDEFINITIONS)",
                         files[startsWith(files, "IOUse_Before_Redefinitions_PRO") &
-                              endsWith(files, "Summary.xlsx")])
+                                endsWith(files, "Summary.xlsx")])
+
+  # FileName <- file.path(dir, "AllTableIO",
+  #                       files[startsWith(files, "IOUse_Before_Redefinitions_PRO") &
+  #                             endsWith(files, "Summary.xlsx")])
   # FileName <- file.path(dir, "AllTablesSUP",
   #                       files[startsWith(files, "Use_Tables") &
   #                               endsWith(files, "Summary.xlsx")])
@@ -735,7 +743,7 @@ getBEACodeName <- function(schema_year) {
 
   ### Sector ###
   # Load data
-  FileName <- file.path(dir, "AllTableIO",
+  FileName <- file.path(dir, "MAKE-USE-IMPORTS (BEFORE REDEFINITIONS)",
                         files[startsWith(files, "IOUse_Before_Redefinitions_PRO") &
                               endsWith(files, "Sector.xlsx")])
   date_last_modified <- as.character(as.Date(file.mtime(FileName)))
