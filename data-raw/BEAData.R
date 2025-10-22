@@ -165,7 +165,7 @@ getBEADetailUsePURBeforeRedef <- function(year) {
 
 # Get BEA Detail Make (After Redef) table from static Excel
 getBEADetailMakeAfterRedef <- function(year) {
-  ls <- unpackFile(year, filename="IOMake_After_Redefinitions", ioschema="Detail ")
+  ls <- unpackFile(year, filename="IOMake_After_Redefinitions", ioschema="Detail")
   ### ^^ Typo in filename from BEA requires extra space in ioschema ^^^
   DetailMake <- data.frame(ls["df"])
   DetailMake <- processDetailMatrix(DetailMake)
