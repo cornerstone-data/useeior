@@ -845,7 +845,11 @@ getBEADetailSupply <- function(year, schema_year = NULL) {
   ls <- getBEAIOTables("SUP")
   FileName <- file.path(dir, "SUPPLY-USE",
                         ls[["files"]][startsWith(ls[["files"]], "Supply") &
-                                      endsWith(ls[["files"]], "DET.xlsx")])
+                                        endsWith(ls[["files"]], "Detail.xlsx")])
+  
+  # FileName <- file.path(dir, "SUPPLY-USE",
+  #                       ls[["files"]][startsWith(ls[["files"]], "Supply") &
+  #                                     endsWith(ls[["files"]], "DET.xlsx")])
   ls["date_last_modified"] <- as.character(as.Date(file.mtime(FileName)))
   DetailSupply <- as.data.frame(readxl::read_excel(FileName,
                                                    sheet = as.character(year)))
@@ -864,7 +868,11 @@ getBEADetailUseSUT <- function(year, schema_year = NULL) {
   ls <- getBEAIOTables("SUP")
   FileName <- file.path(dir, "SUPPLY-USE",
                         ls[["files"]][startsWith(ls[["files"]], "Use") &
-                                        endsWith(ls[["files"]], "DET.xlsx")])
+                                        endsWith(ls[["files"]], "Detail.xlsx")])
+  
+  # FileName <- file.path(dir, "SUPPLY-USE",
+  #                       ls[["files"]][startsWith(ls[["files"]], "Use") &
+  #                                       endsWith(ls[["files"]], "DET.xlsx")])
   ls["date_last_modified"] = as.character(as.Date(file.mtime(FileName)))
   DetailUse <- as.data.frame(readxl::read_excel(FileName,
                                                    sheet = as.character(year)))
