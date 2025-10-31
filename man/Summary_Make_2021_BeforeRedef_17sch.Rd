@@ -8,7 +8,7 @@
 A dataframe with 72 obs. and 74 variables
 }
 \source{
-\url{https://apps.bea.gov/industry/iTables\%20Static\%20Files/AllTablesIO.zip}
+\url{https://apps.bea.gov/industry/release/zip/MAKE-USE-IMPORTS\%20(BEFORE\%20REDEFINITIONS).zip}
 }
 \usage{
 Summary_Make_2021_BeforeRedef_17sch
