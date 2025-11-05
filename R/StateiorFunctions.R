@@ -141,69 +141,6 @@ prepare2RDemand <- function(model, location, domestic, demand_type = "Production
   state_abb <- unique(state_abb)
   iolevel <- model$specs$BaseIOLevel
   ita_column <- ifelse(iolevel == "Detail", "F05100", "F051")
-  
-  if(domestic) {
-    # TODO: CHANGE domestic FROM BOOLEAN TO STRING WITH VALUES 'domestic', 'production', 
-    # and 'import', so we can calculate the import matrix in the following if else if else block
-    use_table <- model$DomesticUseTransactionswithTrade    
-  } else {
-    use_table <- model$UseTransactionswithTrade
-  }
-  # Getting list of final demand columns used for the appropriate demand
-  if(demand_type == "Production") {
-    FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand", 
-                                     "ChangeInventories", "Export", "Import",
-                                     "GovernmentDemand"),
-                                getVectorOfCodes, ioschema = model$specs$BaseIOSchema,
-                                iolevel = iolevel))
-    FD_columns <- FD_columns[FD_columns %in% gsub("/.*", "", model$FinalDemandMeta$Code_Loc)]
-    else if(demand_type == "Consumption") {
-      # Includes only household, investment, and government consumption as per Ingwersen et al. 2022 (USEEIOv2.0 paper)
-      FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand", "GovernmentDemand"),
-                                  getVectorOfCodes, ioschema = model$specs$BaseIOSchema, iolevel = iolevel))
-    }
-    
-    # Calculate production demand for both regions
-    if(location == state_abb[1]) {
-      # calculate production final demand for SoI
-      if(domestic) {
-        SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
-      } else {
-        SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
-      }
-      RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns, ita_column)])
-      y_p <- c(SoI2SoI_y, RoUS2SoI_y)
-      
-    } else if(location == state_abb[2]) {
-      # calculate production final demand for RoUS
-      if(domestic) {
-        RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
-      } else {
-        RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
-      }
-      SoI2RoUS_y <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns, ita_column)])
-      y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
-    }
-    
-  names(y_p) <- model$Commodities$Code_Loc
-  return(y_p)
-}
-
-
-
-#' Prepares a production demand vector representing production for two region models
-#' Demand for SoI = SoI2SoI + RoUS2SoI
-#' Demand for RoUS = SoI2RoUS + RoUS2RoUS
-#' @param model An EEIO model object with model specs and IO tables loaded
-#' @param location, str of location code for demand vector
-#' @param domestic A logical parameter indicating whether to generate domestic demand vector.
-#' @param demand_type A str indicating whether demand is Production or Consumption
-#' @return A named vector with demand
-prepare2RDemand_backup <- function(model, location, domestic, demand_type = "Production") {
-  # Get state abbreviations, e.g., "US-ME" and "RoUS"
-  state_abb <- sub(".*/","",model$FinalDemandMeta$Code_Loc) ## Extract characters after /
-  state_abb <- unique(state_abb)
-  iolevel <- model$specs$BaseIOLevel
 
   if(domestic) {
     # TODO: CHANGE domestic FROM BOOLEAN TO STRING WITH VALUES 'domestic', 'production',
@@ -220,50 +157,115 @@ prepare2RDemand_backup <- function(model, location, domestic, demand_type = "Pro
                                 getVectorOfCodes, ioschema = model$specs$BaseIOSchema,
                                 iolevel = iolevel))
     FD_columns <- FD_columns[FD_columns %in% gsub("/.*", "", model$FinalDemandMeta$Code_Loc)]
-    # Calculate production demand for both regions
-    ita_column <- ifelse(iolevel == "Detail", "F05100", "F051")
-    if(location == state_abb[1]) {
-      # calculate production final demand for SoI
-      if(domestic) {
-        SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
-      } else {
-        SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
-      }
-      RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns, ita_column)])
-      y_p <- c(SoI2SoI_y, RoUS2SoI_y)
-
-    } else if(location == state_abb[2]) {
-      # calculate production final demand for RoUS
-      if(domestic) {
-        RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
-      } else {
-        RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
-      }
-      SoI2RoUS_y <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns, ita_column)])
-      y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
-    }
-
-  } else if(demand_type == "Consumption") {
+  }
+  else if(demand_type == "Consumption") {
     # Includes only household, investment, and government consumption as per Ingwersen et al. 2022 (USEEIOv2.0 paper)
     FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand", "GovernmentDemand"),
                                 getVectorOfCodes, ioschema = model$specs$BaseIOSchema, iolevel = iolevel))
-
-    # Calculate consumption demand for both regions
-    if(location == state_abb[1]) {
-      # calculate consumption final demand for SoI
-      SoI2SoI_y   <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns)])
-      RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns)])
-      y_p <- c(SoI2SoI_y, RoUS2SoI_y)
-    } else if(location == state_abb[2]) {
-      # calculate consumption final demand for RoUS
-      SoI2RoUS_y  <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns)])
-      RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns)])
-      y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
-    }
   }
+
+  # Calculate production demand for both regions
+  if(location == state_abb[1]) {
+    # calculate production final demand for SoI
+    if(domestic) {
+      SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
+    } else {
+      SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
+    }
+    RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns, ita_column)])
+    y_p <- c(SoI2SoI_y, RoUS2SoI_y)
+
+  } else if(location == state_abb[2]) {
+    # calculate production final demand for RoUS
+    if(domestic) {
+      RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
+    } else {
+      RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
+    }
+    SoI2RoUS_y <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns, ita_column)])
+    y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
+  }
+
   names(y_p) <- model$Commodities$Code_Loc
   return(y_p)
 }
+
+
+
+#' #' Prepares a production demand vector representing production for two region models
+#' #' Demand for SoI = SoI2SoI + RoUS2SoI
+#' #' Demand for RoUS = SoI2RoUS + RoUS2RoUS
+#' #' @param model An EEIO model object with model specs and IO tables loaded
+#' #' @param location, str of location code for demand vector
+#' #' @param domestic A logical parameter indicating whether to generate domestic demand vector.
+#' #' @param demand_type A str indicating whether demand is Production or Consumption
+#' #' @return A named vector with demand
+#' prepare2RDemand <- function(model, location, domestic, demand_type = "Production") {
+#'   # OLD FUNCTION
+#'   # Get state abbreviations, e.g., "US-ME" and "RoUS"
+#'   state_abb <- sub(".*/","",model$FinalDemandMeta$Code_Loc) ## Extract characters after /
+#'   state_abb <- unique(state_abb)
+#'   iolevel <- model$specs$BaseIOLevel
+#' 
+#'   if(domestic) {
+#'     # TODO: CHANGE domestic FROM BOOLEAN TO STRING WITH VALUES 'domestic', 'production',
+#'     # and 'import', so we can calculate the import matrix in the following if else if else block
+#'     use_table <- model$DomesticUseTransactionswithTrade
+#'   } else {
+#'     use_table <- model$UseTransactionswithTrade
+#'   }
+#'   # Getting list of final demand columns used for the appropriate demand
+#'   if(demand_type == "Production") {
+#'     FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand",
+#'                                      "ChangeInventories", "Export", "Import",
+#'                                      "GovernmentDemand"),
+#'                                 getVectorOfCodes, ioschema = model$specs$BaseIOSchema,
+#'                                 iolevel = iolevel))
+#'     FD_columns <- FD_columns[FD_columns %in% gsub("/.*", "", model$FinalDemandMeta$Code_Loc)]
+#'     # Calculate production demand for both regions
+#'     ita_column <- ifelse(iolevel == "Detail", "F05100", "F051")
+#'     if(location == state_abb[1]) {
+#'       # calculate production final demand for SoI
+#'       if(domestic) {
+#'         SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
+#'       } else {
+#'         SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
+#'       }
+#'       RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns, ita_column)])
+#'       y_p <- c(SoI2SoI_y, RoUS2SoI_y)
+#' 
+#'     } else if(location == state_abb[2]) {
+#'       # calculate production final demand for RoUS
+#'       if(domestic) {
+#'         RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
+#'       } else {
+#'         RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
+#'       }
+#'       SoI2RoUS_y <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns, ita_column)])
+#'       y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
+#'     }
+#' 
+#'   } else if(demand_type == "Consumption") {
+#'     # Includes only household, investment, and government consumption as per Ingwersen et al. 2022 (USEEIOv2.0 paper)
+#'     FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand", "GovernmentDemand"),
+#'                                 getVectorOfCodes, ioschema = model$specs$BaseIOSchema, iolevel = iolevel))
+#' 
+#'     # Calculate consumption demand for both regions
+#'     if(location == state_abb[1]) {
+#'       # calculate consumption final demand for SoI
+#'       SoI2SoI_y   <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns)])
+#'       RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns)])
+#'       y_p <- c(SoI2SoI_y, RoUS2SoI_y)
+#'     } else if(location == state_abb[2]) {
+#'       # calculate consumption final demand for RoUS
+#'       SoI2RoUS_y  <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns)])
+#'       RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns)])
+#'       y_p <- c(SoI2RoUS_y, RoUS2RoUS_y)
+#'     }
+#'   }
+#'   names(y_p) <- model$Commodities$Code_Loc
+#'   return(y_p)
+#' }
 
 #' Run validation checks for 2R models and print to console
 #' @param model A complete 2R EEIO model: a list with USEEIO model components and attributes
