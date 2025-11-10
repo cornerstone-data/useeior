@@ -2,7 +2,7 @@ Package: useeior
 Type: Package
 Title: USEEIO R modeling software
 Version: 1.8.0
-Date: 2025-9-11
+Date: 2025-11-10
 Authors@R: c(
   person("Ben","Young", email="ben.young@erg.com", role="aut"),
   person("Jorge","Vendries", email="jvendries@gmail.com", role="aut"),
