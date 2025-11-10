@@ -1,6 +1,6 @@
 # useeior <img src="inst/img/logo.png" align="right" width="240" />
 <!-- badges: start -->
-[![R CI/CD test](https://github.com/USEPA/useeior/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/USEPA/useeior/actions/workflows/R-CMD-check.yaml)
+[![R CI/CD test](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![useeior DOI](http://img.shields.io/badge/useeior%20DOI-10.5281/zenodo.7020213-blue.svg)](https://doi.org/10.5281/zenodo.7020213)
 [![useeior paper](http://img.shields.io/badge/useeior%20paper-10.3390/app12094469-blue.svg)](https://doi.org/10.3390/app12094469)
@@ -12,8 +12,8 @@ The [model object](format_specs/Model.md) is the primary output that is built ac
 [Model specifications](inst/extdata/modelspecs) and associated hybridization specifications, e.g. [disaggregation](inst/extdata/disaggspecs), for EPA-validated models are included in the package.
 
 `useeior` offers various functions for validating, calculating, visualizing, and writing out models and/or their components.
-`useeior` is a core component of the [USEEIO Modeling Framework](https://github.com/USEPA/useeio) and is in a stable development state.
-Users intending to use the package for production purposes and applications should use [Releases](https://github.com/USEPA/useeior/releases).
+`useeior` is a core component of the [USEEIO Modeling Framework](https://github.com/cornerstone-data/useeio) and is in a stable development state.
+Users intending to use the package for production purposes and applications should use [Releases](https://github.com/cornerstone-data/useeior/releases).
 `useeior` v1.0.0 was peer-reviewed internally at USEPA and published at Zenodo.
 
 An peer-reviewed article describing `useeior` was published in the journal Applied Sciences in April 2022.
