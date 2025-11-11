@@ -1,19 +1,19 @@
 Package: useeior
 Type: Package
 Title: USEEIO R modeling software
-Version: 1.7.2
-Date: 2025-7-28
+Version: 1.8.0
+Date: 2025-11-10
 Authors@R: c(
   person("Ben","Young", email="ben.young@erg.com", role="aut"),
   person("Jorge","Vendries", email="jvendries@gmail.com", role="aut"),
-  person("Wesley","Ingwersen", email="ingwersen.wesley@epa.gov", role= c("aut", "cre")))
+  person("Wesley","Ingwersen", email="ingwersw@stanford.edu", role= c("aut", "cre")))
 Description: The United States Environmentally-Extended Input-Output model
   is a model used to estimate potential environmental and economic impacts
   associated with the production and consumption of goods and services in the US.
   This package constructs a USEEIO model based on defined configuration parameters,
   calculates, validates, visualizes, and exports USEEIO models.
-URL: https://github.com/USEPA/useeior
-BugReports: https://github.com/USEPA/useeior/issues
+URL: https://github.com/cornerstone-data/useeior
+BugReports: https://github.com/cornerstone-data/useeior/issues
 Imports:
     arrow (>= 2.0.0),
     configr (>= 0.3.4),

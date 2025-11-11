@@ -36,10 +36,11 @@ cfg <- paste0("modelspecs/", m, ".yml")
 model <- buildModel(m, configpaths = file.path(cfg))
 printValidationResults(model)
 
-## USEEIOv2.2-s-GHG Summary, commodity model (2017 Schema)
+## USEEIOv2.2-s-GHG Summary (2022), commodity model (2017 Schema)
 model <- useeior:::initializeModel(m, configpaths = file.path(cfg))
 model$specs$Model <- "USEEIOv2.2-s-GHG"
 model$specs$BaseIOLevel <- "Summary"
+model$specs$IOYear <- 2022
 model$crosswalk <- useeior:::getModelCrosswalk(model) # reassign for summary model
 model <- useeior:::loadIOData(model)
 model <- useeior:::loadandbuildSatelliteTables(model)

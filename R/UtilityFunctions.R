@@ -150,51 +150,98 @@ writeMatrixasBinFile <- function(matrix, path) {
   close(out)
 }
 
-#' downloads files from the Data Commons and stores in a local temporary data directory
+#' Downloads files from a given source and stores in a local data directory
 #' @param source The name of the source file (e.g. "TRACI_2.1_v1.parquet")
-#' @param subdirectory The name of the package where the source file is stored on
-#' Data Commons including any subfolders (e.g. "lciafmt/traci_2_1")
-#' @param debug_url The Data Commons base url, including directory and subdirectories
-downloadDataCommonsfile <- function(source, subdirectory, debug_url) {
+#' @param subdirectory The name of the subdirectory where the source file is stored on
+#' remote location including any subfolders (e.g. "lciafmt/traci_2_1"). May be empty.
+#' @param url The url of the data storage location
+#' @param query_string A string for URLs where query string is present after file name.
+#' e.g. "?download=1". May be empty.
+#' @param localpath A string value looked up from LocalStorageConfig with a path for local storage
+#'  like "flowsa/FlowBySector"
+#' @return NULL if successful
+downloadDataFile <- function(source, subdirectory, url, query_string, localpath) {
   # Define file directory
-  directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
+  directory <- paste0(rappdirs::user_data_dir(), "/", localpath)
   # Check for and create subdirectory if necessary
   if(!file.exists(directory)){
     dir.create(directory, recursive = TRUE)
   }
   
   # Download file
-  utils::download.file(paste0(debug_url, "/", source),
-                       paste0(directory, "/", source),
+  utils::download.file(paste0(file.path(url, source), query_string),
+                       file.path(directory, source),
                        mode = "wb", quiet = TRUE)
 }
 
-#' Load the static file originating from Data Commons either by loading from local directory
-#' or downloading from Data Commons and 
-#' saving to local directory
+#' Load the file originating from a remote location
 #' @param static_file The name of a static file, including the subdirectories
-#' @return The static file originating from Data Commons
-loadDataCommonsfile <- function(static_file) {
+#' @param location The name of the data store location, which is used to look up the URL in RemoteLocationConfig.yml 
+#' @param type A string that matches a key value in LocalStorageConfig.yml
+#' @return The static file loaded from the location or local cache
+loadDataFile <- function(static_file, location, type) {
   # load method name
   method_name <- static_file
   # define symbol to split method name
   pat <- "(.*)/(.*)"
   # subdirectory is the string of the method name prior to the last "/"
-  subdirectory <- sub(pat, "\\1", method_name)
+  
+  if (grepl(pat,method_name)) {
+    remotesubdirectory <- sub(pat, "\\1", method_name)  
+  } else {
+    remotesubdirectory <- ""
+  }
+  
   # file name is the string of the method name after the last "/"
   file_name <- sub(pat, "\\2", method_name)
   
-  # url for data commons
-  debug_url <- paste0("https://dmap-data-commons-ord.s3.amazonaws.com/", subdirectory)
-  
-  directory <- paste0(rappdirs::user_data_dir(), "/", subdirectory)
+  #If file name has a query string strip it off
+  query_string <- ""
+  if(grepl("\\?",file_name)) {
+    name_parts <- strsplit(method_name,"\\?")
+    file_name <- name_parts[[1]][1]
+    query_string <- paste0("?",name_parts[[1]][2])
+  }
+
+  #Load location config
+  configpath <- system.file("extdata/RemoteLocationConfig.yml", package = "useeior")
+  remoteconfig <- configr::read.config(configpath)
+  #Load local storage config
+  configpath <- system.file("extdata/LocalStorageConfig.yml", package = "useeior")
+  localconfig <- configr::read.config(configpath)
+
+  #Use local storage info for local storage path
+  #Local cache
+  localpath <- ""
+  if(remotesubdirectory != "") {
+    localpath <- remotesubdirectory
+  } else if(!is.null(localconfig[[type]])) {
+    localpath <- localconfig[[type]]
+  }
+  directory <- file.path(rappdirs::user_data_dir(), localpath)
   
   # file must be saved in the local directory
   f <- paste0(directory,'/', file_name)
   
   if(!file.exists(f)){
-    logging::loginfo(paste0("file not found, downloading from ", debug_url))
-    downloadDataCommonsfile(file_name, subdirectory, debug_url)
+    if (grepl("Zenodo", location)) {
+      # Extract the entry ID from the model spec for use in url
+      id <- sub("Zenodo", "", location)
+      location <- "Zenodo"
+    } else {
+      id <- ""
+    }
+    if (is.null(remoteconfig[[location]])) {
+      logging::logerror(paste("The location", location," does not have a URL associated with it. ",
+                              "Ensure it is listed in RemoteLocationConfig.yml"))
+      return(NULL)
+    } else {
+      url <- file.path(sub("__ID__", id, remoteconfig[[location]]),
+                       remotesubdirectory)
+    }
+    logging::loginfo(paste0("file not found, downloading from ", url))
+    downloadDataFile(file_name, remotesubdirectory, url, query_string=query_string,
+                     localpath=localpath)
   }
   return(f)
 }

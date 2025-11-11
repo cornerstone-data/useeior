@@ -1,6 +1,6 @@
 # useeior <img src="inst/img/logo.png" align="right" width="240" />
 <!-- badges: start -->
-[![R CI/CD test](https://github.com/USEPA/useeior/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/USEPA/useeior/actions/workflows/R-CMD-check.yaml)
+[![R CI/CD test](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![useeior DOI](http://img.shields.io/badge/useeior%20DOI-10.5281/zenodo.7020213-blue.svg)](https://doi.org/10.5281/zenodo.7020213)
 [![useeior paper](http://img.shields.io/badge/useeior%20paper-10.3390/app12094469-blue.svg)](https://doi.org/10.3390/app12094469)
@@ -12,8 +12,8 @@ The [model object](format_specs/Model.md) is the primary output that is built ac
 [Model specifications](inst/extdata/modelspecs) and associated hybridization specifications, e.g. [disaggregation](inst/extdata/disaggspecs), for EPA-validated models are included in the package.
 
 `useeior` offers various functions for validating, calculating, visualizing, and writing out models and/or their components.
-`useeior` is a core component of the [USEEIO Modeling Framework](https://github.com/USEPA/useeio) and is in a stable development state.
-Users intending to use the package for production purposes and applications should use [Releases](https://github.com/USEPA/useeior/releases).
+`useeior` is a core component of the [USEEIO Modeling Framework](https://github.com/cornerstone-data/useeio) and is in a stable development state.
+Users intending to use the package for production purposes and applications should use [Releases](https://github.com/cornerstone-data/useeior/releases).
 `useeior` v1.0.0 was peer-reviewed internally at USEPA and published at Zenodo.
 
 An peer-reviewed article describing `useeior` was published in the journal Applied Sciences in April 2022.
@@ -37,22 +37,22 @@ Li, M., Ingwersen, W.W., Young, B., Vendries, J. and Birney, C., 2022. useeior: 
 
 See the following sections for installation and basic usage of `useeior`.
 
-See [Wiki](https://github.com/USEPA/useeior/wiki) for advanced uses, details about built-in data and metadata and how to contribute to `useeior`.
+<!-- See [Wiki](https://github.com/USEPA/useeior/wiki) for advanced uses, details about built-in data and metadata and how to contribute to `useeior`. -->
 
 ## Installation
 
 ```r
 # Install development version from GitHub
 install.packages("devtools")
-devtools::install_github("USEPA/useeior")
+devtools::install_github("cornerstone-data/useeior")
 ```
 
 ```r
 # Install a previously released version (e.g. v1.0.0) from GitHub
-devtools::install_github("USEPA/useeior@v1.0.0")
+devtools::install_github("cornerstone-data/useeior@v1.7.0")
 ```
 
-See [Releases](https://github.com/USEPA/useeior/releases) for all previously released versions.
+See [Releases](https://github.com/cornerstone-data/useeior/releases) for all previously released versions.
 
 ## Usage
 
@@ -225,7 +225,3 @@ Currently, it only compares flow totals between two models. More comparisons wil
 ### Additional Information
 
 A complete list of available functions for calculating, validating, exporting and visualizing model can be found [here](https://github.com/USEPA/useeior/wiki/Using-useeior#calculate-validate-export-visualize-model) in the Wiki.
-
-## Disclaimer
-
-The United States Environmental Protection Agency (EPA) GitHub project code is provided on an "as is" basis and the user assumes responsibility for its use.  EPA has relinquished control of the information and no longer has responsibility to protect the integrity , confidentiality, or availability of the information.  Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by EPA.  The EPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by EPA or the United States Government.

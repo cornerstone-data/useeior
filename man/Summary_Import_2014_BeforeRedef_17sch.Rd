@@ -8,7 +8,7 @@
 A dataframe with 73 obs. and 93 variables
 }
 \source{
-\url{https://apps.bea.gov/industry/xls/io-annual/ImportMatrices_Before_Redefinitions_SUM_1997-2023.xlsx}
+\url{https://apps.bea.gov/industry/release/zip/MAKE-USE-IMPORTS\%20(BEFORE\%20REDEFINITIONS).zip}
 }
 \usage{
 Summary_Import_2014_BeforeRedef_17sch

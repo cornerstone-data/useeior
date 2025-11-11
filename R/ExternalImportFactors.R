@@ -19,15 +19,13 @@ loadExternalImportFactors <- function(model, configpaths = NULL) {
 #' @return IFtable, dataframe of unprocessed import factors
 readImportFactorTable <- function(IFSpec, configpaths = NULL) {
   # Read in file with Import factors
-  if(is.null(IFSpec$FileLocation)){
+  if(is.null(IFSpec$FileLocation) || IFSpec$FileLocation == "useeior"){
     filename <- getInputFilePath(configpaths, folderPath = "extdata", filename = IFSpec$StaticFile)
-  } else if(IFSpec$FileLocation == "DataCommons") {
-    filename <- loadDataCommonsfile(IFSpec$StaticFile)    
-  } else if(IFSpec$FileLocation == "useeior") {
-    filename <- getInputFilePath(configpaths, folderPath = "extdata", filename = IFSpec$StaticFile)
-  }
-  IFTable <- utils::read.table(filename, sep = ",", header = TRUE,
+  } else {
+    filename <- loadDataFile(IFSpec$StaticFile, IFSpec$FileLocation, "ImportFactors")    
+    IFTable <- utils::read.table(filename, sep = ",", header = TRUE,
                                stringsAsFactors = FALSE)
+  }
   return(IFTable)
 }
 

@@ -8,7 +8,7 @@
 A dataframe with 74 obs. and 83 variables
 }
 \source{
-\url{https://apps.bea.gov/industry/iTables\%20Static\%20Files/AllTablesSUP.zip}
+\url{https://apps.bea.gov/industry/release/zip/SUPPLY-USE.zip}
 }
 \usage{
 Summary_Supply_2020_17sch

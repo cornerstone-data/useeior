@@ -41,7 +41,7 @@ loadSatTables <- function(model) {
     if(sat_spec$FileLocation == 'None'){
       logging::loginfo(paste0("Generating ", sat_spec$FullName, " flows..."))      
     } else {
-      logging::loginfo(paste0("Loading ", sat_spec$FullName, " flows from ", sat_spec$FileLocation, "..."))
+      logging::loginfo(paste0("Loading ", sat_spec$FullName, " flows..."))
     }
     if(sat_spec$SectorListSource == "NAICS" && sat_spec$SectorListYear != model$specs$BaseIOSchema) {
       logging::logwarn(paste0("SectorListYear of ", sat_spec$FullName," does not match the BaseIOSchema ",
@@ -117,12 +117,9 @@ generateTbSfromSatSpec <- function(sat_spec, model) {
       }
     }
     totals_by_sector <- do.call(eval(totalsgenfunction), list(params))
-  } else if (sat_spec$FileLocation == "DataCommons") {
-    f <- loadDataCommonsfile(sat_spec$StaticFile)
-    totals_by_sector <- utils::read.table(f, sep = ",", header = TRUE, stringsAsFactors = FALSE,
-                                          fileEncoding = 'UTF-8-BOM')
   } else {
-    totals_by_sector <- utils::read.table(sat_spec$StaticFile, sep = ",",
+    f <- loadDataFile(sat_spec$StaticFile, sat_spec$FileLocation, "SatelliteTable")
+    totals_by_sector <- utils::read.table(f, sep = ",",
                                           header = TRUE, stringsAsFactors = FALSE,
                                           fileEncoding = 'UTF-8-BOM')    
   }

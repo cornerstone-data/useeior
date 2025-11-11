@@ -182,7 +182,7 @@ disaggregateSetup <- function (model, configpaths = NULL, setupType = "Disaggreg
     }
 
     if(!is.null(spec$SourceFile)) {
-      fbs <- getFlowbySector(spec$SourceFile)
+      fbs <- getFlowbySector(spec)
       
       # TODO: check if this if statement is necessary. 
       # That is, confirm that disaggregation cannot happen from SourceFile and thus this if statement would not be entered 
