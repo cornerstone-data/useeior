@@ -2,7 +2,7 @@
 <!-- badges: start -->
 [![R CI/CD test](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cornerstone-data/useeior/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![useeior DOI](http://img.shields.io/badge/useeior%20DOI-10.5281/zenodo.7020213-blue.svg)](https://doi.org/10.5281/zenodo.7020213)
+[![useeior DOI](http://img.shields.io/badge/useeior%20DOI-10.5281/zenodo.17584738-blue.svg)](https://doi.org/10.5281/zenodo.17584738)
 [![useeior paper](http://img.shields.io/badge/useeior%20paper-10.3390/app12094469-blue.svg)](https://doi.org/10.3390/app12094469)
 <!-- badges: end -->
 
