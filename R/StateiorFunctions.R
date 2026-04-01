@@ -135,7 +135,7 @@ generate2RDirectRequirementsfromUseWithTrade <- function(model, domestic){
 }
 
 
-#' Prepares a production demand vector representing production for two region models
+#' Prepares a demand vector for two region models
 #' Demand for SoI = SoI2SoI + RoUS2SoI
 #' Demand for RoUS = SoI2RoUS + RoUS2RoUS
 #' @param model An EEIO model object with model specs and IO tables loaded
