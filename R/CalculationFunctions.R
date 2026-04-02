@@ -93,10 +93,6 @@ prepareDemandVectorForImportResults <- function(model, demand = "Production", lo
     }
     # Calculate import demand vector y_m. 
     if(demand == "Production") {
-      # This option left in for validation purposes.
-      logging::loginfo(paste0("Warning: Production demand vector not recommended ",
-                              "for estimating results for models with external ",
-                              "Import Factors."))
       y_m <- prepareImportProductionDemand(model, location = location)
     } else if(demand == "Consumption") {
       y_m <- prepareImportConsumptionDemand(model, location = location)
