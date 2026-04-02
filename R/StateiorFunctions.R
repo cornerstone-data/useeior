@@ -143,7 +143,7 @@ generate2RDirectRequirementsfromUseWithTrade <- function(model, domestic){
 #' @param domestic A logical parameter indicating whether to generate domestic demand vector.
 #' @param demand_type A str indicating whether demand is Production or Consumption
 #' @return A named vector with demand
-prepare2RDemand <- function(model, location, domestic, demand_type = "Production") {
+prepare2RDemand <- function(model, location, domestic, import=FALSE, demand_type = "Production") {
   # Get state abbreviations, e.g., "US-ME" and "RoUS"
   state_abb <- sub(".*/","",model$FinalDemandMeta$Code_Loc) ## Extract characters after /
   state_abb <- unique(state_abb)
@@ -154,9 +154,13 @@ prepare2RDemand <- function(model, location, domestic, demand_type = "Production
     # TODO: CHANGE domestic FROM BOOLEAN TO STRING WITH VALUES 'domestic', 'production',
     # and 'import', so we can calculate the import matrix in the following if else if else block
     use_table <- model$DomesticUseTransactionswithTrade
+  } else if(import) {
+    # Subtracts domestic from total for each of 4 objects of the transactions lists
+    use_table <- Map(`-`, model$UseTransactionswithTrade, model$DomesticUseTransactionswithTrade)
   } else {
     use_table <- model$UseTransactionswithTrade
   }
+
   # Getting list of final demand columns used for the appropriate demand
   if(demand_type == "Production") {
     FD_columns <- unlist(sapply(list("HouseholdDemand", "InvestmentDemand",
