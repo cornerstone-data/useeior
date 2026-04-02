@@ -91,7 +91,7 @@ prepareDomesticProductionDemand <- function(model, location) {
 #' @return A named vector with demand
 prepareImportProductionDemand <- function(model, location) {
   if (model$specs$IODataSource == "stateior") {
-    y_m_p <- prepare2RDemand(model, location, domestic = FALSE)
+    y_m_p <- prepare2RDemand(model, location, domestic = FALSE, import = TRUE)
   } else {
     # Note that model$mu (i.e., ITA) is not included in import production demand
     # because it is included in Domestic Production Demand
