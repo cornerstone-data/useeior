@@ -180,22 +180,24 @@ prepare2RDemand <- function(model, location, domestic, import=FALSE, demand_type
   # State with SoI 
   if(location == state_abb[1]) {
     # calculate final demand for SoI
-    if(domestic) {
-      SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
-    } else {
-      SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
-    }
+    # if(domestic) {
+    #   SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
+    # } else {
+    #   SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, "ExportResidual")])
+    # }
+    SoI2SoI_y <- rowSums(use_table[["SoI2SoI"]][, c(FD_columns, ita_column, "ExportResidual")])
     RoUS2SoI_y  <- rowSums(use_table[["RoUS2SoI"]][, c(FD_columns, ita_column)])
     y <- c(SoI2SoI_y, RoUS2SoI_y)
 
   # For RoUS
   } else if(location == state_abb[2]) {
     # calculate final demand for RoUS
-    if(domestic) {
-      RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
-    } else {
-      RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
-    }
+    # if(domestic) {
+    #   RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
+    # } else {
+    #   RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, "ExportResidual")])
+    # }
+    RoUS2RoUS_y <- rowSums(use_table[["RoUS2RoUS"]][, c(FD_columns, ita_column, "ExportResidual")])
     SoI2RoUS_y <- rowSums(use_table[["SoI2RoUS"]][, c(FD_columns, ita_column)])
     y <- c(SoI2RoUS_y, RoUS2RoUS_y)
   }
@@ -254,7 +256,7 @@ print2RValidationResults <- function(model) {
   twoRegionResults_ls$finalResultsProductionComplete <- finalResultsProductionComplete
   twoRegionResults_ls$finalResultsConsumptionComplete <- finalResultsConsumptionComplete
 
-  # return(twoRegionResults_ls)
+  return(twoRegionResults_ls)
 }
 
 
